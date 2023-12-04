@@ -40,9 +40,19 @@ function handleTurn() {
     let idx = squares.findIndex(function(square) {
         return square === event.target;
     });
-    board[idx] = turn;
-    turn = turn === 'X' ? 'O' : 'X';
-    win = getWinner();
+    if (board[idx] == ''){
+        board[idx] = turn;
+        turn = turn === 'X' ? 'O' : 'X';
+    }
+    win = getWinner(); 
+    if (win == "O" || win == "X") /* Si un joueur a gagné, lancer la fonction fireworks, sinon non */
+    {
+        fireworks();
+    }
+    else
+    {
+        noFireworks()
+    }
     render();
 };
 
@@ -52,6 +62,7 @@ function init() {
     '', '', '',
     '', '', ''
     ];
+    handleTurn(); /* Permet de reinitialiser completement le jeu et la phrase */
     render();
 };
 
@@ -60,7 +71,24 @@ function render() {
     //this moves the value of the board item into the squares[idx]
     squares[index].textContent = mark;
     });
-    messages.textContent = win === 'T' ? `That's a tie, queen!` : win ? `${win} wins the game!` : `It's ${turn}'s turn!`;
+    messages.textContent = win === 'T' ? `Égalité!` : win ? `${win} gagne la partie!` : `C'est au tour de ${turn}!`;
     };
 
 init();
+
+function fireworks() { /* Change le fond d'écran pour un gif de feu d'artifice */ 
+    document.getElementById("body").classList.add("fireworks");
+}
+
+function noFireworks() { /* Enleve le fond d'écran */
+    document.getElementById("body").classList.remove("fireworks");
+}
+
+/*  FONCTIONNALITÉS
+*   Corrigé les bugs suivants:
+*       - Possibilité de changer les symbols déjà placés
+*       - Le bouton réinitiliser ne réinitialise pas la phrase
+*
+*   Ajouté des feux d'artifice lorsqu'un joueur gagne
+*       - "Réinitialiser" retire les feux d'artifices
+*/
